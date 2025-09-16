@@ -1,2 +1,11 @@
 # Software-Engineering-Project
-This is the final project for our Software Engineering class. We built a mobile app that uses Machine Learning to classify foods from package labels based on the NOVA system (NOVA 1–4). The app helps users identify if a product is ultra-processed or not.
+This repository contains the final project for our Software Engineering class.
+Our team developed a mobile application that implements Machine Learning for food classification based on the NOVA system.
+
+The app allows users to take a photo of a food package label, and the model will classify the product into one of the following categories:
+- NOVA 1 → Unprocessed foods
+- NOVA 2 → Processed culinary ingredients
+- NOVA 3 → Processed foods
+- NOVA 4 → Ultra-processed foods
+
+The goal of this project is to help users easily identify whether a food product is ultra-processed or not, making it simpler to understand nutritional quality based on packaging labels.
