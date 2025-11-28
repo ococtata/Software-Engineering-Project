@@ -16,10 +16,41 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
     required this.client,
     String? modelApiUrl,
     String? ocrApiUrl,
-  })  : modelApiUrl = (modelApiUrl ??
-            dotenv.env['MODEL_API'] ?? '').replaceAll(RegExp(r'/+$'), ''),
-        ocrApiUrl = (ocrApiUrl ??
-            dotenv.env['OCR_API'] ?? '').replaceAll(RegExp(r'/+$'), '');
+  }) : modelApiUrl = _getApiUrl(
+         modelApiUrl,
+         'MODEL_API',
+         'https://eatalyze-production.up.railway.app',
+       ),
+       ocrApiUrl = _getApiUrl(
+         ocrApiUrl,
+         'OCR_API',
+         'https://your-ocr-endpoint.com',
+       );
+  
+  static String _getApiUrl(String? url, String envKey, String fallback) {
+    // Check if we're in production web (deployed)
+    if (kIsWeb) {
+      // Check if running on deployed domain (not localhost)
+      final currentUrl = Uri.base.toString();
+
+      if (!currentUrl.contains('localhost') &&
+          !currentUrl.contains('127.0.0.1')) {
+
+        // Production - use relative proxy URL
+        print('Using proxy for $envKey');
+        return '/api';
+      }
+    }
+
+    // Development - use direct URL
+    final apiUrl = (url ?? dotenv.env[envKey] ?? fallback).replaceAll(
+      RegExp(r'/+$'),
+      '',
+    );
+
+    print('🔧 Using direct URL for $envKey: $apiUrl');
+    return apiUrl;
+  }
 
   @override
   Future<NovaResult> analyzeFood(NutritionalData data) async {
@@ -52,12 +83,13 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
   @override
   Future<NutritionalData> extractFromImage(String imagePath) async {
     try {
-      print('Sending to OCR API: $ocrApiUrl');
+      final url = '$ocrApiUrl';
+      print('Sending to OCR API: $url');
       print('Image path: $imagePath');
 
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('$ocrApiUrl/ocr'),
+        Uri.parse(url),
       );
 
       if (kIsWeb) {
