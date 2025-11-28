@@ -27,14 +27,14 @@ class NutritionalData {
 
   Map<String, double> toMap() {
     return {
-      'energy-kcal_1g': energyKcal,
+      'energy_kcal_1g': energyKcal,
       'fat_1g': fat,
       'carbohydrates_1g': carbohydrates,
-      'protein_1g': protein,
-      'saturated-fat_1g': saturatedFat,
-      'trans-fat_1g': transFat,
+      'proteins_1g': protein,
+      'saturated_fat_1g': saturatedFat,
+      'trans_fat_1g': transFat,
       'sugars_1g': sugars,
-      'added-sugars_1g': addedSugars,
+      'added_sugars_1g': addedSugars,
       'sodium_1g': sodium,
       'salt_1g': salt,
       'fiber_1g': fiber,
@@ -43,14 +43,14 @@ class NutritionalData {
 
   factory NutritionalData.fromJson(Map<String, dynamic> json) {
     return NutritionalData(
-      energyKcal: (json['energy-kcal_1g'] ?? 0).toDouble(),
+      energyKcal: (json['energy_kcal_1g'] ?? 0).toDouble(),
       fat: (json['fat_1g'] ?? 0).toDouble(),
       carbohydrates: (json['carbohydrates_1g'] ?? 0).toDouble(),
-      protein: (json['protein_1g'] ?? 0).toDouble(),
-      saturatedFat: (json['saturated-fat_1g'] ?? 0).toDouble(),
-      transFat: (json['trans-fat_1g'] ?? 0).toDouble(),
+      protein: (json['proteins_1g'] ?? json['protein_1g'] ?? 0).toDouble(),
+      saturatedFat: (json['saturated_fat_1g'] ?? 0).toDouble(),
+      transFat: (json['trans_fat_1g'] ?? 0).toDouble(),
       sugars: (json['sugars_1g'] ?? 0).toDouble(),
-      addedSugars: (json['added-sugars_1g'] ?? 0).toDouble(),
+      addedSugars: (json['added_sugars_1g'] ?? 0).toDouble(),
       sodium: (json['sodium_1g'] ?? 0).toDouble(),
       salt: (json['salt_1g'] ?? 0).toDouble(),
       fiber: (json['fiber_1g'] ?? 0).toDouble(),

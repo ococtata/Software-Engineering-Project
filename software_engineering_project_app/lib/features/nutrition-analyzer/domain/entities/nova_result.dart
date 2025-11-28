@@ -2,13 +2,11 @@ class NovaResult {
   final int novaGroup;
   final String label;
   final String description;
-  final double confidence;
 
   NovaResult({
     required this.novaGroup,
     required this.label,
     required this.description,
-    required this.confidence,
   });
 
   static String getLabelForGroup(int group) {
@@ -42,12 +40,16 @@ class NovaResult {
   }
 
   factory NovaResult.fromJson(Map<String, dynamic> json) {
-    final group = json['nova_group'] as int;
+    final predictionList = json['prediction'];
+    final group = (predictionList is List && predictionList.isNotEmpty)
+        ? predictionList.first
+              .toInt()
+        : 0;
+
     return NovaResult(
       novaGroup: group,
       label: getLabelForGroup(group),
       description: getDescriptionForGroup(group),
-      confidence: (json['confidence'] ?? 1.0).toDouble(),
     );
   }
 }
