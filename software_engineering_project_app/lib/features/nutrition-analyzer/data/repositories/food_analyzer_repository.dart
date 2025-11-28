@@ -16,52 +16,30 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
     required this.client,
     String? modelApiUrl,
     String? ocrApiUrl,
-  }) : modelApiUrl = _getApiUrl(
-         modelApiUrl,
-         'MODEL_API',
-         'https://eatalyze-production.up.railway.app',
-       ),
-       ocrApiUrl = _getApiUrl(
-         ocrApiUrl,
-         'OCR_API',
-         'https://your-ocr-endpoint.com',
-       );
-  
-  static String _getApiUrl(String? url, String envKey, String fallback) {
-    // Check if we're in production web (deployed)
-    if (kIsWeb) {
-      // Check if running on deployed domain (not localhost)
-      final currentUrl = Uri.base.toString();
-
-      if (!currentUrl.contains('localhost') &&
-          !currentUrl.contains('127.0.0.1')) {
-
-        // Production - use relative proxy URL
-        print('Using proxy for $envKey');
-        return '/api';
-      }
-    }
-
-    // Development - use direct URL
-    final apiUrl = (url ?? dotenv.env[envKey] ?? fallback).replaceAll(
-      RegExp(r'/+$'),
-      '',
-    );
-
-    print('🔧 Using direct URL for $envKey: $apiUrl');
-    return apiUrl;
-  }
+  })  : modelApiUrl = modelApiUrl ??
+            dotenv.env['MODEL_API'] ??
+            (kIsWeb 
+                ? '/api'  // Use proxy for web
+                : 'https://eatalyze-production.up.railway.app'),
+        ocrApiUrl = ocrApiUrl ??
+            dotenv.env['OCR_API'] ??
+            (kIsWeb 
+                ? '/api'  // Use proxy for web
+                : 'https://eatalyze-production.up.railway.app');
 
   @override
   Future<NovaResult> analyzeFood(NutritionalData data) async {
     try {
       final url = '$modelApiUrl/predict';
-      print('Sending to MODEL API: $url');
+      print('📊 Sending to MODEL API: $url');
       print('Data: ${json.encode(data.toMap())}');
 
       final response = await client.post(
         Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body: json.encode(data.toMap()),
       );
 
@@ -75,25 +53,21 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
             'Failed to analyze food: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
-      print('Error in analyzeFood: $e');
-      throw Exception('Error analyzing food: $e');
+      print('❌ Error in analyzeFood: $e');
+      rethrow;
     }
   }
 
   @override
   Future<NutritionalData> extractFromImage(String imagePath) async {
     try {
-      final url = '$ocrApiUrl';
-      print('Sending to OCR API: $url');
+      final url = '$ocrApiUrl/ocr';
+      print('🖼️ Sending to OCR API: $url');
       print('Image path: $imagePath');
 
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(url),
-      );
+      var request = http.MultipartRequest('POST', Uri.parse(url));
 
       if (kIsWeb) {
-        // For web, read bytes from blob URL
         final XFile file = XFile(imagePath);
         final bytes = await file.readAsBytes();
 
@@ -105,7 +79,6 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
           ),
         );
       } else {
-        // For mobile/desktop, use file path
         request.files.add(
           await http.MultipartFile.fromPath('image', imagePath),
         );
@@ -120,23 +93,14 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
-        
-        // The OCR API should return data in this format:
-        // {
-        //   "energy_kcal_1g": 2.5,
-        //   "fat_1g": 0.1,
-        //   "carbohydrates_1g": 0.5,
-        //   ...
-        // }
-        
         return NutritionalData.fromJson(jsonData);
       } else {
         throw Exception(
             'Failed to extract data from image: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
-      print('Error in extractFromImage: $e');
-      throw Exception('Error extracting nutritional data from image: $e');
+      print('❌ Error in extractFromImage: $e');
+      rethrow;
     }
   }
 }

@@ -6,7 +6,14 @@ import 'features/nutrition-analyzer/presentation/pages/main_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
+
+  try {
+    await dotenv.load(fileName: ".env");
+    print('.env loaded');
+  } catch (e) {
+    print('.env not found');
+  }
+
   runApp(const MyApp());
 }
 
