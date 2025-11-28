@@ -37,7 +37,7 @@ class NutritionalData {
       'trans_fat_1g': transFatG / servingSizeG,
       'sugars_1g': sugarsG / servingSizeG,
       'added_sugars_1g': addedSugarsG / servingSizeG,
-      'sodium_1g': (sodiumMg / 1000) / servingSizeG,
+      'sodium_1g': (sodiumMg * 1000) / servingSizeG,
       'salt_1g': saltG / servingSizeG,
       'fiber_1g': fiberG / servingSizeG,
     };
