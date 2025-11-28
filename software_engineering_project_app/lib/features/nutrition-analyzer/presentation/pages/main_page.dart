@@ -30,8 +30,8 @@ class _FoodAnalyzerPageState extends State<FoodAnalyzerPage> {
     });
 
     try {
-      print('📊 Analyzing food with MODEL API...');
-      final result = await widget.service.analyzeFood(data);
+      print('Analyzing food with MODEL API...');
+      final result = await widget.service.analyzeNutrition(data);
       setState(() {
         _result = result;
         _isLoading = false;
@@ -82,7 +82,7 @@ class _FoodAnalyzerPageState extends State<FoodAnalyzerPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('✅ Data extracted! Fields have been auto-filled.'),
+            content: Text('Data extracted! Fields have been auto-filled.'),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 3),
           ),
@@ -97,7 +97,7 @@ class _FoodAnalyzerPageState extends State<FoodAnalyzerPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('❌ OCR Error: $e'),
+            content: Text('OCR Error: $e'),
             backgroundColor: Colors.red,
             duration: Duration(seconds: 5),
           ),

@@ -2,6 +2,6 @@ import 'package:software_engineering_project/features/nutrition-analyzer/domain/
 import 'package:software_engineering_project/features/nutrition-analyzer/domain/entities/nutritional_data.dart';
 
 abstract class FoodAnalyzerService {
-  Future<NovaResult> analyzeFood(NutritionalData data);
+  Future<NovaResult> analyzeNutrition(NutritionalData data);
   Future<NutritionalData> extractFromImage(String imagePath);
 }

@@ -1,20 +1,22 @@
 @echo off
 echo Deploying...
 
-echo [1/3] Getting dependencies...
+echo [1/5] Getting dependencies...
 call flutter pub get
 
-echo [2/3] Building for web...
+echo [2/5] Building for web...
 call flutter build web --release
 
-echo [3/3] Copying vercel.json...
+echo [3/5] Copying vercel.json...
 copy vercel.json build\web\vercel.json >nul
 
-echo.
 echo Build complete!
-echo.
-echo Next steps:
-echo   cd build\web
-echo   vercel --prod
-echo.
+echo [4/5] 
+cd build\web
+
+echo [5/5] Deploying to Vercel...
+call vercel --prod
+
+echo Deployment complete!
+cd ../..
 pause

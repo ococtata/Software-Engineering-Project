@@ -19,19 +19,19 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
   })  : modelApiUrl = modelApiUrl ??
             dotenv.env['MODEL_API'] ??
             (kIsWeb 
-                ? '/api'  // Use proxy for web
+                ? '/api'  // Use Vercel proxy for web deployment
                 : 'https://eatalyze-production.up.railway.app'),
         ocrApiUrl = ocrApiUrl ??
             dotenv.env['OCR_API'] ??
             (kIsWeb 
-                ? '/api'  // Use proxy for web
-                : 'https://eatalyze-production.up.railway.app');
+                ? '/api'  // Use Vercel proxy for web deployment
+                : 'https://empty-for-now.railway.app');
 
   @override
-  Future<NovaResult> analyzeFood(NutritionalData data) async {
+  Future<NovaResult> analyzeNutrition(NutritionalData data) async {
     try {
       final url = '$modelApiUrl/predict';
-      print('📊 Sending to MODEL API: $url');
+      print('Sending to MODEL API: $url');
       print('Data: ${json.encode(data.toMap())}');
 
       final response = await client.post(
@@ -53,7 +53,7 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
             'Failed to analyze food: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
-      print('❌ Error in analyzeFood: $e');
+      print('Error in analyzeNutrition: $e');
       rethrow;
     }
   }
@@ -62,7 +62,7 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
   Future<NutritionalData> extractFromImage(String imagePath) async {
     try {
       final url = '$ocrApiUrl/ocr';
-      print('🖼️ Sending to OCR API: $url');
+      print('Sending to OCR API: $url');
       print('Image path: $imagePath');
 
       var request = http.MultipartRequest('POST', Uri.parse(url));
@@ -99,7 +99,7 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
             'Failed to extract data from image: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
-      print('❌ Error in extractFromImage: $e');
+      print('Error in extractFromImage: $e');
       rethrow;
     }
   }

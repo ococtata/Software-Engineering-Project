@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -30,8 +29,9 @@ class _InputFormWidgetState extends State<InputFormWidget> {
   String? _selectedFileName;
 
   final Map<String, TextEditingController> _controllers = {
+    'servingSize': TextEditingController(),
     'energy': TextEditingController(),
-    'fat': TextEditingController(),
+    'totalFat': TextEditingController(),
     'carbs': TextEditingController(),
     'protein': TextEditingController(),
     'satFat': TextEditingController(),
@@ -60,17 +60,18 @@ class _InputFormWidgetState extends State<InputFormWidget> {
   void _populateFromExtractedData() {
     if (widget.extractedData != null) {
       final data = widget.extractedData!;
+      _controllers['servingSize']!.text = data.servingSizeG.toString();
       _controllers['energy']!.text = data.energyKcal.toString();
-      _controllers['fat']!.text = data.fat.toString();
-      _controllers['carbs']!.text = data.carbohydrates.toString();
-      _controllers['protein']!.text = data.protein.toString();
-      _controllers['satFat']!.text = data.saturatedFat.toString();
-      _controllers['transFat']!.text = data.transFat.toString();
-      _controllers['sugars']!.text = data.sugars.toString();
-      _controllers['addedSugars']!.text = data.addedSugars.toString();
-      _controllers['sodium']!.text = data.sodium.toString();
-      _controllers['salt']!.text = data.salt.toString();
-      _controllers['fiber']!.text = data.fiber.toString();
+      _controllers['totalFat']!.text = data.totalFatG.toString();
+      _controllers['carbs']!.text = data.carbohydratesG.toString();
+      _controllers['protein']!.text = data.proteinG.toString();
+      _controllers['satFat']!.text = data.saturatedFatG.toString();
+      _controllers['transFat']!.text = data.transFatG.toString();
+      _controllers['sugars']!.text = data.sugarsG.toString();
+      _controllers['addedSugars']!.text = data.addedSugarsG.toString();
+      _controllers['sodium']!.text = data.sodiumMg.toString();
+      _controllers['salt']!.text = data.saltG.toString();
+      _controllers['fiber']!.text = data.fiberG.toString();
     }
   }
 
@@ -113,17 +114,18 @@ class _InputFormWidgetState extends State<InputFormWidget> {
   void _handleAnalyze() {
     if (_formKey.currentState!.validate()) {
       final data = NutritionalData(
+        servingSizeG: double.parse(_controllers['servingSize']!.text),
         energyKcal: double.parse(_controllers['energy']!.text),
-        fat: double.parse(_controllers['fat']!.text),
-        carbohydrates: double.parse(_controllers['carbs']!.text),
-        protein: double.parse(_controllers['protein']!.text),
-        saturatedFat: double.parse(_controllers['satFat']!.text),
-        transFat: double.parse(_controllers['transFat']!.text),
-        sugars: double.parse(_controllers['sugars']!.text),
-        addedSugars: double.parse(_controllers['addedSugars']!.text),
-        sodium: double.parse(_controllers['sodium']!.text),
-        salt: double.parse(_controllers['salt']!.text),
-        fiber: double.parse(_controllers['fiber']!.text),
+        totalFatG: double.parse(_controllers['totalFat']!.text),
+        carbohydratesG: double.parse(_controllers['carbs']!.text),
+        proteinG: double.parse(_controllers['protein']!.text),
+        saturatedFatG: double.parse(_controllers['satFat']!.text),
+        transFatG: double.parse(_controllers['transFat']!.text),
+        sugarsG: double.parse(_controllers['sugars']!.text),
+        addedSugarsG: double.parse(_controllers['addedSugars']!.text),
+        sodiumMg: double.parse(_controllers['sodium']!.text),
+        saltG: double.parse(_controllers['salt']!.text),
+        fiberG: double.parse(_controllers['fiber']!.text),
       );
       widget.onAnalyze(data);
     }
@@ -155,27 +157,35 @@ class _InputFormWidgetState extends State<InputFormWidget> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Enter values per 1g of product',
+              'Enter values exactly as shown on the label',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Colors.grey[600],
                   ),
             ),
             const SizedBox(height: 24),
 
+            Text(
+              'Amount per serving',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[700],
+              ),
+            ),
+            const SizedBox(height: 8),
+
             // Input fields
-            _buildTextField('energy', 'Energy (kcal/g)', Icons.flash_on),
-            _buildTextField('fat', 'Fat (g)', Icons.water_drop),
-            _buildTextField('carbs', 'Carbohydrates (g)', Icons.grain),
-            _buildTextField('protein', 'Protein (g)', Icons.egg),
-            _buildTextField(
-                'satFat', 'Saturated Fat (g)', Icons.water_drop_outlined),
+            _buildTextField('servingSize', 'Serving Size (g)', Icons.scale),
+            _buildTextField('energy', 'Calories', Icons. flash_on),
+            _buildTextField('totalFat', 'Total Fat (g)', Icons.water_drop),
+            _buildTextField('satFat', 'Saturated Fat (g)', Icons.water_drop_outlined),
             _buildTextField('transFat', 'Trans Fat (g)', Icons.dangerous),
-            _buildTextField('sugars', 'Sugars (g)', Icons.cake),
-            _buildTextField(
-                'addedSugars', 'Added Sugars (g)', Icons.add_circle_outline),
-            _buildTextField('sodium', 'Sodium (g)', Icons.circle_outlined),
-            _buildTextField('salt', 'Salt (g)', Icons.circle),
+            _buildTextField('sodium', 'Sodium (mg)', Icons.circle_outlined),
+            _buildTextField('carbs', 'Total Carbohydrates (g)', Icons.grain),
             _buildTextField('fiber', 'Fiber (g)', Icons.spa),
+            _buildTextField('sugars', 'Sugars (g)', Icons.cake),
+            _buildTextField('addedSugars', 'Added Sugars (g)', Icons.add_circle_outline),
+            _buildTextField('protein', 'Protein (g)', Icons.egg),
+            _buildTextField('salt', 'Salt (g)', Icons.circle),
 
             const SizedBox(height: 24),
 
@@ -221,7 +231,7 @@ class _InputFormWidgetState extends State<InputFormWidget> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        _selectedFileName ?? 'Extract nutritional data from label',
+                        _selectedFileName ?? 'Extract nutritional data from image',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Colors.grey[600],
                             ),
