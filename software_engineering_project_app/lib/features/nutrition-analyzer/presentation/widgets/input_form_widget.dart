@@ -174,7 +174,7 @@ class _InputFormWidgetState extends State<InputFormWidget> {
             const SizedBox(height: 8),
 
             // Input fields
-            _buildTextField('servingSize', 'Serving Size (g)', Icons.scale),
+            _buildTextField('servingSize', 'Serving Size (g)', Icons.scale, isServingSize: true),
             _buildTextField('energy', 'Calories', Icons. flash_on),
             _buildTextField('totalFat', 'Total Fat (g)', Icons.water_drop),
             _buildTextField('satFat', 'Saturated Fat (g)', Icons.water_drop_outlined),
@@ -298,7 +298,7 @@ class _InputFormWidgetState extends State<InputFormWidget> {
     );
   }
 
-  Widget _buildTextField(String key, String label, IconData icon) {
+  Widget _buildTextField(String key, String label, IconData icon, {bool isServingSize = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
@@ -315,7 +315,16 @@ class _InputFormWidgetState extends State<InputFormWidget> {
         ],
         validator: (value) {
           if (value == null || value.isEmpty) return 'Required';
-          if (double.tryParse(value) == null) return 'Invalid number';
+
+          final parsedValue = double.tryParse(value);
+          if (parsedValue == null) return 'Invalid number';
+
+          if (parsedValue < 0) return 'Cannot be negative';
+
+          if (isServingSize && parsedValue == 0) {
+            return 'Serving size cannot be 0 grams';
+          }
+
           return null;
         },
       ),

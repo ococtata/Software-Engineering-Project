@@ -155,15 +155,14 @@ class ResultDisplayWidget extends StatelessWidget {
                   ),
             ),
             const SizedBox(height: 16),
-            _buildNovaInfoItem(0, 'Unprocessed',
+            _buildNovaInfoItem(1, 'Unprocessed',
                 'Fresh foods with no processing', selectedGroup),
-            _buildNovaInfoItem(1, 'Minimally Processed',
-                'Minimal processing for preservation', selectedGroup),
             _buildNovaInfoItem(2, 'Processed Culinary',
-                'Ingredients for cooking', selectedGroup),
+                'Processed ingredients for cooking', selectedGroup),
+            _buildNovaInfoItem(3, 'Processed',
+                'Foods with added ingredients', selectedGroup),
             _buildNovaInfoItem(
-                3, 'Processed', 'Foods with added ingredients', selectedGroup),
-            _buildNovaInfoItem(4, 'Ultra-Processed',
+                4, 'Ultra-Processed', 
                 'Industrial formulations', selectedGroup),
           ],
         ),
@@ -237,10 +236,8 @@ class ResultDisplayWidget extends StatelessWidget {
 
   Color _getColorForGroup(int group) {
     switch (group) {
-      case 0:
-        return Colors.green;
       case 1:
-        return Colors.lightGreen;
+        return Colors.green;
       case 2:
         return Colors.yellow.shade700;
       case 3:
@@ -254,10 +251,8 @@ class ResultDisplayWidget extends StatelessWidget {
 
   IconData _getIconForGroup(int group) {
     switch (group) {
-      case 0:
-        return Icons.eco;
       case 1:
-        return Icons.nature;
+        return Icons.eco;
       case 2:
         return Icons.kitchen;
       case 3:
