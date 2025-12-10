@@ -25,7 +25,7 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
             dotenv.env['OCR_API'] ??
             (kIsWeb 
                 ? '/api'  // Use Vercel proxy for web deployment
-                : 'https://empty-for-now.railway.app');
+                : 'https://eatalyzeocr-production.up.railway.app');
 
   @override
   Future<NovaResult> analyzeNutrition(NutritionalData data) async {
@@ -61,7 +61,7 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
   @override
   Future<NutritionalData> extractFromImage(String imagePath) async {
     try {
-      final url = '$ocrApiUrl/ocr';
+      final url = '$ocrApiUrl/analyze';
       print('Sending to OCR API: $url');
       print('Image path: $imagePath');
 

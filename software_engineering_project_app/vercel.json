@@ -2,12 +2,12 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "https://eatalyze-production.up.railway.app/:path*"
+      "source": "/api/predict",
+      "destination": "https://eatalyze-production.up.railway.app/predict"
     },
     {
-      "source": "/api/ocr",
-      "destination": "https://eatalyze-production.up.railway.app/ocr"
+      "source": "/api/analyze",
+      "destination": "https://eatalyzeocr-production.up.railway.app/analyze"
     },
     {
       "source": "/(.*)",
