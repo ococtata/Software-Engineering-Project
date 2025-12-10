@@ -9,7 +9,7 @@ void main() async {
 
   try {
     await dotenv.load(fileName: ".env");
-    print('.env loaded');
+    // print('.env loaded');
   } catch (e) {
     print('.env not found');
   }

@@ -31,8 +31,8 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
   Future<NovaResult> analyzeNutrition(NutritionalData data) async {
     try {
       final url = '$modelApiUrl/predict';
-      print('Sending to MODEL API: $url');
-      print('Data: ${json.encode(data.toMap())}');
+      // print('Sending to MODEL API: $url');
+      // print('Data: ${json.encode(data.toMap())}');
 
       final response = await client.post(
         Uri.parse(url),
@@ -43,8 +43,8 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
         body: json.encode(data.toMap()),
       );
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      // print('Response status: ${response.statusCode}');
+      // print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         return NovaResult.fromJson(json.decode(response.body));
@@ -62,8 +62,8 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
   Future<NutritionalData> extractFromImage(String imagePath) async {
     try {
       final url = '$ocrApiUrl/analyze';
-      print('Sending to OCR API: $url');
-      print('Image path: $imagePath');
+      // print('Sending to OCR API: $url');
+      // print('Image path: $imagePath');
 
       var request = http.MultipartRequest('POST', Uri.parse(url));
 
@@ -84,16 +84,17 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
         );
       }
 
-      print('Sending OCR request...');
+      // print('Sending OCR request...');
       final streamed = await request.send();
       final response = await http.Response.fromStream(streamed);
 
-      print('OCR Response status: ${response.statusCode}');
-      print('OCR Response body: ${response.body}');
+      // print('OCR Response status: ${response.statusCode}');
+      // print('OCR Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
-        return NutritionalData.fromJson(jsonData);
+        final nutritionalData = NutritionalData.fromJson(jsonData);
+        return nutritionalData;
       } else {
         throw Exception(
             'Failed to extract data from image: ${response.statusCode} - ${response.body}');

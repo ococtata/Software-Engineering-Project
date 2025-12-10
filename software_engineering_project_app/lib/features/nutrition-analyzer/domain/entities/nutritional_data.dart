@@ -44,19 +44,28 @@ class NutritionalData {
   }
 
   factory NutritionalData.fromJson(Map<String, dynamic> json) {
+    // print('Received JSON: $json');
     return NutritionalData(
-      servingSizeG: (json['serving_size'] ?? 0).toDouble(),
-      energyKcal: (json['energy_kcal_1g'] ?? 0).toDouble(),
-      totalFatG: (json['fat_1g'] ?? 0).toDouble(),
-      carbohydratesG: (json['carbohydrates_1g'] ?? 0).toDouble(),
-      proteinG: (json['proteins_1g'] ?? json['protein_1g'] ?? 0).toDouble(),
-      saturatedFatG: (json['saturated_fat_1g'] ?? 0).toDouble(),
-      transFatG: (json['trans_fat_1g'] ?? 0).toDouble(),
-      sugarsG: (json['sugars_1g'] ?? 0).toDouble(),
-      addedSugarsG: (json['added_sugars_1g'] ?? 0).toDouble(),
-      sodiumMg: (json['sodium_1g'] ?? 0).toDouble(),
-      saltG: (json['salt_1g'] ?? 0).toDouble(),
-      fiberG: (json['fiber_1g'] ?? 0).toDouble(),
+      servingSizeG: _parseDouble(json['serving-size']),
+      energyKcal: _parseDouble(json['energy-kcal']),
+      totalFatG: _parseDouble(json['fat']),
+      carbohydratesG: _parseDouble(json['carbohydrates']),
+      proteinG: _parseDouble(json['proteins']),
+      saturatedFatG: _parseDouble(json['saturated-fat']),
+      transFatG: _parseDouble(json['trans-fat']),
+      sugarsG: _parseDouble(json['sugars']),
+      addedSugarsG: _parseDouble(json['added-sugars']),
+      sodiumMg: _parseDouble(json['sodium']),
+      saltG: _parseDouble(json['salt']),
+      fiberG: _parseDouble(json['fiber']),
     );
+  }
+
+  static double _parseDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
   }
 }
