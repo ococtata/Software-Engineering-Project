@@ -20,7 +20,7 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
             dotenv.env['MODEL_API'] ??
             (kIsWeb 
                 ? '/api'  // Use Vercel proxy for web deployment
-                : 'https://eatalyze-production.up.railway.app'),
+                : 'https://semodel-production.up.railway.app'),
         ocrApiUrl = ocrApiUrl ??
             dotenv.env['OCR_API'] ??
             (kIsWeb 
