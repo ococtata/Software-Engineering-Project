@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/api/predict",
-      "destination": "https://eatalyze-production.up.railway.app/predict"
+      "destination": "https://semodel-production.up.railway.app/predict"
     },
     {
       "source": "/api/analyze",
-      "destination": "https://eatalyzeocr-production.up.railway.app/analyze"
+      "destination": "https://seocr-production.up.railway.app/analyze"
     },
     {
       "source": "/(.*)",
