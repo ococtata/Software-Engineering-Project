@@ -25,7 +25,7 @@ class FoodAnalyzerRepository implements FoodAnalyzerService {
             dotenv.env['OCR_API'] ??
             (kIsWeb 
                 ? '/api'  // Use Vercel proxy for web deployment
-                : 'https://eatalyzeocr-production.up.railway.app');
+                : 'https://seocr-production.up.railway.app');
 
   @override
   Future<NovaResult> analyzeNutrition(NutritionalData data) async {
